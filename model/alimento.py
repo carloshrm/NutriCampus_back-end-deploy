@@ -1,0 +1,95 @@
+from sqlalchemy import Column, ForeignKey, Float, String, TIMESTAMP, Float
+from sqlalchemy.sql import text
+from database import Base
+
+class Alimento(Base):
+  __tablename__ = 'alimento'
+
+  _id = Column(String, primary_key=True, nullable=False)
+  _nome = Column(String, nullable=False)
+  umidade = Column(Float, server_default="0.0")
+  energia_kcal = Column(Float, server_default="0.0")
+  energia_kj = Column(Float, server_default="0.0")
+  proteina = Column(Float, server_default="0.0")
+  lipideos = Column(Float, server_default="0.0")
+  colesterol = Column(Float, server_default="0.0")
+  carboidrato = Column(Float, server_default="0.0")
+  fibra_alimentar = Column(Float, server_default="0.0")
+  cinzas = Column(Float, server_default="0.0")
+  calcio = Column(Float, server_default="0.0")
+  magnesio = Column(Float, server_default="0.0")
+  created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'), nullable=False)
+
+  centesimal = Column(ForeignKey('alimento_centesimal._id'))
+  graxos = Column(ForeignKey("alimento_acidosgraxos"))
+  aminoacidos = Column(ForeignKey("alimento_aminoacidos"))
+
+class Alimento_Centesimal(Base):
+  __tablename__ = 'alimento_centesimal'
+
+  _id = Column(String, primary_key=True, nullable=False)
+  manganes = Column(Float, server_default="0.0")
+  fosforo = Column(Float, server_default="0.0")
+  ferro = Column(Float, server_default="0.0")
+  sodio = Column(Float, server_default="0.0")
+  potassio = Column(Float, server_default="0.0")
+  cobre = Column(Float, server_default="0.0")
+  zinco = Column(Float, server_default="0.0")
+  retinol = Column(Float, server_default="0.0")
+  re = Column(Float, server_default="0.0")
+  rae = Column(Float, server_default="0.0")
+  tiamina = Column(Float, server_default="0.0")
+  riboflavina = Column(Float, server_default="0.0")
+  piridoxina = Column(Float, server_default="0.0")
+  niacina = Column(Float, server_default="0.0")
+  vitamina_c = Column(Float, server_default="0.0")
+
+class Alimento_AcidosGraxos(Base):
+  __tablename__ = 'alimento_acidosgraxos'
+
+  _id = Column(String, primary_key=True, nullable=False)
+  saturados = Column(Float, server_default="0.0")
+  mono_insaturados = Column(Float, server_default="0.0")
+  poli_insaturados = Column(Float, server_default="0.0")
+  a12_0 = Column(Float, server_default="0.0")
+  a14_0 = Column(Float, server_default="0.0")
+  a16_0 = Column(Float, server_default="0.0")
+  a18_0 = Column(Float, server_default="0.0")
+  a20_0 = Column(Float, server_default="0.0")
+  a22_0 = Column(Float, server_default="0.0")
+  a24_0 = Column(Float, server_default="0.0")
+  a14_1 = Column(Float, server_default="0.0")
+  a16_1 = Column(Float, server_default="0.0")
+  a18_1 = Column(Float, server_default="0.0")
+  a20_1 = Column(Float, server_default="0.0")
+  a18_2_6 = Column(Float, server_default="0.0")
+  a18_3_3 = Column(Float, server_default="0.0")
+  a20_4 = Column(Float, server_default="0.0")
+  a20_5 = Column(Float, server_default="0.0")
+  a22_5 = Column(Float, server_default="0.0")
+  a22_6 = Column(Float, server_default="0.0")
+  at181 = Column(Float, server_default="0.0")
+  at182 = Column(Float, server_default="0.0")
+
+class Alimento_Aminoacidos(Base):
+  __tablename__ = 'alimento_aminoacidos'
+
+  _id = Column(String, primary_key=True, nullable=False)
+  triptofano = Column(Float, server_default="0.0")
+  treonina = Column(Float, server_default="0.0")
+  isoleucina = Column(Float, server_default="0.0")
+  leucina = Column(Float, server_default="0.0")
+  lisina = Column(Float, server_default="0.0")
+  metionina = Column(Float, server_default="0.0")
+  cistina = Column(Float, server_default="0.0")
+  fenilalanina = Column(Float, server_default="0.0")
+  tirosina = Column(Float, server_default="0.0")
+  valina = Column(Float, server_default="0.0")
+  arginina = Column(Float, server_default="0.0")
+  histidina = Column(Float, server_default="0.0")
+  alanina = Column(Float, server_default="0.0")
+  acido_aspartico = Column(Float, server_default="0.0")
+  acido_glutamico = Column(Float, server_default="0.0")
+  glicina = Column(Float, server_default="0.0")
+  prolina = Column(Float, server_default="0.0")
+  serina = Column(Float, server_default="0.0")
