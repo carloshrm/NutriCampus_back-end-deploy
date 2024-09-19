@@ -1,11 +1,12 @@
-from sqlalchemy import Column, ForeignKey, Float, String, TIMESTAMP, Float
+from sqlalchemy import Column, ForeignKey, Float, Integer, String, TIMESTAMP, Float
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import text
 from database import Base
 
 class Alimento(Base):
   __tablename__ = 'alimento'
 
-  _id = Column(String, primary_key=True, nullable=False)
+  _id = Column(Integer, primary_key=True, nullable=False)
   _nome = Column(String, nullable=False)
   umidade = Column(Float, server_default="0.0")
   energia_kcal = Column(Float, server_default="0.0")
@@ -20,14 +21,16 @@ class Alimento(Base):
   magnesio = Column(Float, server_default="0.0")
   created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'), nullable=False)
 
-  centesimal = Column(ForeignKey('alimento_centesimal._id'))
-  graxos = Column(ForeignKey("alimento_acidosgraxos"))
-  aminoacidos = Column(ForeignKey("alimento_aminoacidos"))
+  centesimal = relationship('Alimento_Centesimal', backref=backref("Alimento"), uselist=False, cascade="all")
+  graxos = relationship('Alimento_AcidosGraxos', backref=backref("Alimento"), uselist=False, cascade="all")
+  aminoacidos = relationship('Alimento_Aminoacidos', backref=backref("Alimento"), uselist=False, cascade="all")
 
 class Alimento_Centesimal(Base):
   __tablename__ = 'alimento_centesimal'
 
   _id = Column(String, primary_key=True, nullable=False)
+  alimento_id = Column(Integer, ForeignKey('alimento._id'), unique=True)
+  
   manganes = Column(Float, server_default="0.0")
   fosforo = Column(Float, server_default="0.0")
   ferro = Column(Float, server_default="0.0")
@@ -48,33 +51,37 @@ class Alimento_AcidosGraxos(Base):
   __tablename__ = 'alimento_acidosgraxos'
 
   _id = Column(String, primary_key=True, nullable=False)
+  alimento_id = Column(Integer, ForeignKey('alimento._id'), unique=True)
+
   saturados = Column(Float, server_default="0.0")
   mono_insaturados = Column(Float, server_default="0.0")
   poli_insaturados = Column(Float, server_default="0.0")
-  a12_0 = Column(Float, server_default="0.0")
-  a14_0 = Column(Float, server_default="0.0")
-  a16_0 = Column(Float, server_default="0.0")
-  a18_0 = Column(Float, server_default="0.0")
-  a20_0 = Column(Float, server_default="0.0")
-  a22_0 = Column(Float, server_default="0.0")
-  a24_0 = Column(Float, server_default="0.0")
-  a14_1 = Column(Float, server_default="0.0")
-  a16_1 = Column(Float, server_default="0.0")
-  a18_1 = Column(Float, server_default="0.0")
-  a20_1 = Column(Float, server_default="0.0")
-  a18_2_6 = Column(Float, server_default="0.0")
-  a18_3_3 = Column(Float, server_default="0.0")
-  a20_4 = Column(Float, server_default="0.0")
-  a20_5 = Column(Float, server_default="0.0")
-  a22_5 = Column(Float, server_default="0.0")
-  a22_6 = Column(Float, server_default="0.0")
-  at181 = Column(Float, server_default="0.0")
-  at182 = Column(Float, server_default="0.0")
+  _12_0 = Column(Float, server_default="0.0")
+  _14_0 = Column(Float, server_default="0.0")
+  _16_0 = Column(Float, server_default="0.0")
+  _18_0 = Column(Float, server_default="0.0")
+  _20_0 = Column(Float, server_default="0.0")
+  _22_0 = Column(Float, server_default="0.0")
+  _24_0 = Column(Float, server_default="0.0")
+  _14_1 = Column(Float, server_default="0.0")
+  _16_1 = Column(Float, server_default="0.0")
+  _18_1 = Column(Float, server_default="0.0")
+  _20_1 = Column(Float, server_default="0.0")
+  _18_2n6 = Column(Float, server_default="0.0")
+  _18_3n3 = Column(Float, server_default="0.0")
+  _20_4 = Column(Float, server_default="0.0")
+  _20_5 = Column(Float, server_default="0.0")
+  _22_5 = Column(Float, server_default="0.0")
+  _22_6 = Column(Float, server_default="0.0")
+  _18_1t = Column(Float, server_default="0.0")
+  _18_2t = Column(Float, server_default="0.0")
 
 class Alimento_Aminoacidos(Base):
   __tablename__ = 'alimento_aminoacidos'
 
   _id = Column(String, primary_key=True, nullable=False)
+  alimento_id = Column(Integer, ForeignKey('alimento._id'), unique=True)
+
   triptofano = Column(Float, server_default="0.0")
   treonina = Column(Float, server_default="0.0")
   isoleucina = Column(Float, server_default="0.0")
