@@ -7,7 +7,7 @@ import scraping.TACO.modelo_tabelas as modelo_tabelas
 import requests
 from database import engine, Base
 from sqlalchemy.orm import Session
-from model.alimento import Alimento, Alimento_Centesimal
+from model.alimento import Alimento, Alimento_AcidosGraxos, Alimento_Aminoacidos, Alimento_Centesimal
 
 NOME_ARQ_PDF = "./scraping/TACO/tabela.pdf"
 
@@ -121,9 +121,11 @@ def _reconhecer_graxos(colecao_info):
 
 def _preencher_banco(info):  
   with Session(engine) as db:
-    if db.query(Alimento).count() != 0:
-      db.query(Alimento).delete()
-      db.commit()
+    db.query(Alimento_Centesimal).delete()
+    db.query(Alimento_AcidosGraxos).delete()
+    db.query(Alimento_Aminoacidos).delete()
+    db.query(Alimento).delete()
+    db.commit()
     
     for al in info.items():
       if al[1]['nome'] == []:
@@ -131,20 +133,22 @@ def _preencher_banco(info):
 
       novoAlim = Alimento(_id=al[0], _nome=";".join(al[1]['nome']) ,**dict(list(al[1]['centesimal'].items())[:11]))
       novoAlim.centesimal = Alimento_Centesimal(_id=al[0], **dict(list(al[1]['centesimal'].items())[11:]))
-      # novoAlim.acidos_graxos = dict(list(al[1]['acidos_graxos'].items()))
-      # novoAlim.aminoacidos = dict(list(al[1]['aminoacidos'].items()))
+      novoAlim.acidos_graxos = Alimento_AcidosGraxos(_id=al[0], **dict(list(al[1]['acidos_graxos'].items())))
+      novoAlim.aminoacidos = Alimento_Aminoacidos(_id=al[0], **dict(list(al[1]['aminoacidos'].items())))
       
       db.add(novoAlim)
       
       db.commit()
 
 
-def executar_scraping():
+def executar_scraping(force=False):
+  with Session(engine) as db:
+    if (db.query(Alimento).count() != 0) and not force:
+       return
+
   locale.setlocale(locale.LC_NUMERIC, "pt-br")
   _baixar_pdf()
   colecao_info = _preparar_colecao()
-
   _reconhecer_centesimal(colecao_info)
   _reconhecer_graxos(colecao_info)
-
   _preencher_banco(colecao_info)
