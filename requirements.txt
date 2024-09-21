@@ -1,5 +1,6 @@
 annotated-types==0.7.0
 anyio==4.4.0
+APScheduler==3.10.4
 camelot-py==0.11.0
 certifi==2024.8.30
 cffi==1.17.1
@@ -45,6 +46,7 @@ python-dotenv==1.0.1
 python-multipart==0.0.9
 pytz==2024.2
 PyYAML==6.0.2
+redbird==0.7.1
 requests==2.32.3
 rich==13.8.1
 setuptools==74.1.2
@@ -57,6 +59,7 @@ tabulate==0.9.0
 typer==0.12.5
 typing_extensions==4.12.2
 tzdata==2024.1
+tzlocal==5.2
 ujson==5.10.0
 urllib3==2.2.3
 uvicorn==0.30.6
