@@ -144,10 +144,11 @@ def executar_scraping(force=False):
   with Session(engine) as db:
     if (db.query(Alimento).count() != 0) and not force:
        return
-
+  print("Iniciando scraping da tabela TACO...")
   locale.setlocale(locale.LC_NUMERIC, "pt-br")
   _baixar_pdf()
   colecao_info = _preparar_colecao()
   _reconhecer_centesimal(colecao_info)
   _reconhecer_graxos(colecao_info)
   _preencher_banco(colecao_info)
+  print("Scraping da tabela TACO finalizado.")
