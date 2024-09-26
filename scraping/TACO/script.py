@@ -1,11 +1,10 @@
 import os
 import camelot
-import json
 import locale
 import unicodedata
 import scraping.TACO.modelo_tabelas as modelo_tabelas
 import requests
-from database import engine, Base
+from database import engine
 from sqlalchemy.orm import Session
 from model.alimento import Alimento, Alimento_AcidosGraxos, Alimento_Aminoacidos, Alimento_Centesimal
 
@@ -133,7 +132,7 @@ def _preencher_banco(info):
 
       novoAlim = Alimento(_id=al[0], _nome=";".join(al[1]['nome']) ,**dict(list(al[1]['centesimal'].items())[:11]))
       novoAlim.centesimal = Alimento_Centesimal(_id=al[0], **dict(list(al[1]['centesimal'].items())[11:]))
-      novoAlim.acidos_graxos = Alimento_AcidosGraxos(_id=al[0], **dict(list(al[1]['acidos_graxos'].items())))
+      novoAlim.graxos = Alimento_AcidosGraxos(_id=al[0], **dict(list(al[1]['acidos_graxos'].items())))
       novoAlim.aminoacidos = Alimento_Aminoacidos(_id=al[0], **dict(list(al[1]['aminoacidos'].items())))
       
       db.add(novoAlim)
