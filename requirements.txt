@@ -1,6 +1,7 @@
 annotated-types==0.7.0
 anyio==4.4.0
 APScheduler==3.10.4
+bcrypt==4.2.0
 camelot-py==0.11.0
 certifi==2024.8.30
 cffi==1.17.1
@@ -31,6 +32,7 @@ opencv-python==4.10.0.84
 openpyxl==3.1.5
 orjson==3.10.7
 pandas==2.2.2
+passlib==1.7.4
 pdfminer.six==20240706
 psycopg2==2.9.9
 pycparser==2.22
@@ -39,6 +41,7 @@ pydantic-extra-types==2.9.0
 pydantic-settings==2.5.2
 pydantic_core==2.23.3
 Pygments==2.18.0
+PyJWT==2.9.0
 pypdf==4.3.1
 PyPDF2==3.0.1
 python-dateutil==2.9.0.post0
@@ -49,6 +52,7 @@ PyYAML==6.0.2
 redbird==0.7.1
 requests==2.32.3
 rich==13.8.1
+rocketry==2.5.1
 setuptools==74.1.2
 shellingham==1.5.4
 six==1.16.0
