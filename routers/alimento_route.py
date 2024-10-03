@@ -1,8 +1,5 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
-from sqlalchemy.orm import Session, joinedload
-from database import get_db
-from model.alimento import Alimento
 from services.alimento_service import Alimento_Service
 from http import HTTPStatus
 router = APIRouter()

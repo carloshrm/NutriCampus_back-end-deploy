@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from jwt import InvalidTokenError
 from model.pydantic.auth_dto import JWT, Signin
 from model.pydantic.usuario_dto import Usuario_DTO

@@ -1,10 +1,8 @@
 import os
 import jwt
 from datetime import datetime, timedelta, timezone
-from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from services.usuario_service import Usuario_Service
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,6 +14,7 @@ JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
 JWT_EXPIRES_DELTA_MINUTES = os.getenv("JWT_EXPIRES_DELTA_MINUTES")
 
 class Auth_Service:
+
   def __init__(self):
       self.password_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
