@@ -38,6 +38,16 @@ def separar_arroz(arroz_lista):
             arroz_integral = arroz
     return arroz_branco, arroz_integral
 
+# Função auxiliar para separar feijão principal e secundário
+def separar_feijao(feijao_lista):
+    feijao_principal = 'Não Encontrado'
+    feijao_secundario = None
+    if len(feijao_lista) > 0:
+        feijao_principal = feijao_lista[0]
+    if len(feijao_lista) > 1:
+        feijao_secundario = feijao_lista[1]
+    return feijao_principal, feijao_secundario
+
 # Função para salvar os dados no banco de dados PostgreSQL
 def salvar_no_banco(campus_data):
     # Conexão com o banco de dados PostgreSQL usando variáveis de ambiente
@@ -49,7 +59,7 @@ def salvar_no_banco(campus_data):
     )
     cursor = conn.cursor()
 
-    # Criação da tabela com colunas separadas para arroz branco e integral
+    # Criação da tabela com colunas separadas para arroz branco, integral, feijão principal e secundário
     cursor.execute(""" 
         CREATE TABLE IF NOT EXISTS cardapios (
             id SERIAL PRIMARY KEY,
@@ -58,9 +68,10 @@ def salvar_no_banco(campus_data):
             refeicao VARCHAR(50),
             prato_principal TEXT,
             prato_veg TEXT,
-            arroz_branco TEXT,
-            arroz_integral TEXT,
-            feijao TEXT,
+            arroz_principal TEXT,
+            arroz_secundario TEXT,
+            feijao_principal TEXT,
+            feijao_secundario TEXT,
             guarnicao TEXT,
             salada TEXT
         );
@@ -72,23 +83,24 @@ def salvar_no_banco(campus_data):
         for dia in dias:
             data = dia['data']
             for refeicao, pratos in dia['cardapio'].items():
-                # Extrair os pratos para as colunas apropriadas
                 prato_principal = ', '.join(pratos.get('prato_principal', ['Não Encontrado']))
                 prato_veg = ', '.join(pratos.get('prato_veg', ['Não Encontrado']))
 
-                # Separar arroz branco e arroz integral
                 arroz_lista = pratos.get('arroz', ['Não Encontrado'])
                 arroz_branco, arroz_integral = separar_arroz(arroz_lista)
 
-                feijao = ', '.join(pratos.get('feijao', ['Não Encontrado']))
+                feijao_lista = pratos.get('feijao', ['Não Encontrado'])
+                feijao_principal, feijao_secundario = separar_feijao(feijao_lista)
+
                 guarnicao = ', '.join(pratos.get('guarnicao', ['Não Encontrado']))
                 salada = ', '.join(pratos.get('salada', ['Não Encontrado']))
 
                 # Inserir uma única linha com todos os pratos
                 cursor.execute("""
-                    INSERT INTO cardapios (campus, data, refeicao, prato_principal, prato_veg, arroz_branco, arroz_integral, feijao, guarnicao, salada)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-                """, (campus, data, refeicao, prato_principal, prato_veg, arroz_branco, arroz_integral, feijao, guarnicao, salada))
+                    INSERT INTO cardapios (campus, data, refeicao, prato_principal, prato_veg, arroz_principal, arroz_secundario, feijao_principal, feijao_secundario, guarnicao, salada)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                """, (campus, data, refeicao, prato_principal, prato_veg, arroz_branco, arroz_integral, feijao_principal, feijao_secundario, guarnicao, salada))
+
 
     # Confirmar a transação e fechar a conexão
     conn.commit()
@@ -186,10 +198,6 @@ def main():
 
     campus_data = extrair_cardapios(urls)
 
-
     salvar_json(campus_data)
 
-
     salvar_no_banco(campus_data)
-
-
