@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
 from scraping.TACO import script as TACOScraping
+from scraping.Cardapio import scrapping as CardapioScraping
 
 load_dotenv()
 
@@ -16,6 +17,7 @@ JOB_NAME = 'scrape-timer'
 
 def run_all_scrapes():
   TACOScraping.executar_scraping()
+  
   # chamar outras tarefas de scraping
 
 def setup_scrape_jobs():
@@ -25,3 +27,5 @@ def setup_scrape_jobs():
 
   if not scheduler.get_job(JOB_NAME):
     scheduler.add_job(run_all_scrapes, 'cron', day_of_week='sun', hour=1, id=JOB_NAME)
+  
+  CardapioScraping.main()
