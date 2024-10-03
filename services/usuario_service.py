@@ -9,7 +9,7 @@ class Usuario_Service:
     self.db = db
 
   def get_by_id(self, id):
-    return self.db.query(Usuario).filter(Usuario._id == id).first()
+    return self.db.query(Usuario).filter(Usuario.id == id).first()
   
   def get_by_email(self, email):
     return self.db.query(Usuario).filter(Usuario.email == email).first()
