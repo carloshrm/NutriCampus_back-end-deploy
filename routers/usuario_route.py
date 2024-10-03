@@ -1,3 +1,4 @@
+import re
 from fastapi import APIRouter, Depends, HTTPException, status
 from jwt import InvalidTokenError
 from model.pydantic.auth_dto import JWT, Signin
@@ -16,11 +17,11 @@ async def get_user_current(token: str  = Depends(oauth2_scheme), usuario_service
         raise InvalidTokenError()
 
     except InvalidTokenError:
-      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
+      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Erro ao executar autenticação")
 
     user = usuario_service.get_by_id(id)
     if not user:
-      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Credenciais inválidas")
+      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Email ou senha inválidos")
     return user
 
 
@@ -44,10 +45,21 @@ async def usuario_signin(credentials: Signin, auth_service: Auth_Service = Depen
 
 @router.post("/auth/signup")
 async def usuario_signup(usuario: Usuario_DTO, usuario_service: Usuario_Service = Depends(), auth_service: Auth_Service = Depends()):
-  usuario_existente = usuario_service.get_by_email(usuario.email)
-  if usuario_existente:
+  if not re.match(r"^\S+@\S+\.\S+$",usuario.email):
+    raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Email inválido")
+
+  if len(usuario.senha) <= 8 or len(usuario.senha) >= 16:
+    raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Senha deve ter entre 8 e 16 caracteres")
+
+  if usuario_service.get_by_email(usuario.email):
     raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Email já cadastrado")
 
+  if usuario.altura <= 0:
+    raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Altura inválida")
+  
+  if (usuario.peso <= 0):
+    raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Peso inválido")
+                        
   usuario.senha = auth_service.get_password_hash(usuario.senha)
   novo_usuario = Usuario(**usuario.model_dump())
   usuario_criado = usuario_service.create(novo_usuario)
