@@ -17,7 +17,7 @@ JOB_NAME = 'scrape-timer'
 
 def run_all_scrapes():
   TACOScraping.executar_scraping()
-  
+  CardapioScraping.main()
   # chamar outras tarefas de scraping
 
 def setup_scrape_jobs():
@@ -26,6 +26,6 @@ def setup_scrape_jobs():
   scheduler.start()
 
   if not scheduler.get_job(JOB_NAME):
+    run_all_scrapes()
     scheduler.add_job(run_all_scrapes, 'cron', day_of_week='sun', hour=1, id=JOB_NAME)
   
-  CardapioScraping.main()

@@ -11,3 +11,5 @@ class Usuario(Base):
   data_nascimento = Column(String, nullable=False)
   peso = Column(Float, nullable=False)
   altura = Column(Float, nullable=False)
+  atividade = Column(Integer ,nullable=False)
+  sexo = Column(String(1), nullable=False)

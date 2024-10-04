@@ -7,3 +7,5 @@ class Usuario_DTO(BaseModel):
   data_nascimento: str
   altura: float
   peso: float
+  atividade: int
+  sexo: str
