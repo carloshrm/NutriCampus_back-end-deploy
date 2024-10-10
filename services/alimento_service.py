@@ -13,3 +13,10 @@ class Alimento_Service:
       joinedload(Alimento.graxos), 
       joinedload(Alimento.aminoacidos), 
       joinedload(Alimento.centesimal)).filter(Alimento._id == id).first()
+
+  def get_by_name(self, name):
+    name = name.lower()
+    return self.db.query(Alimento).options(
+      joinedload(Alimento.graxos), 
+      joinedload(Alimento.aminoacidos), 
+      joinedload(Alimento.centesimal)).filter(name in Alimento._nome.split(';')).first()

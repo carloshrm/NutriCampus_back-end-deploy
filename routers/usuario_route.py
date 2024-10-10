@@ -57,7 +57,7 @@ async def usuario_signup(usuario: Usuario_DTO, usuario_service: Usuario_Service 
   if usuario.altura <= 0:
     raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Altura inválida")
   
-  if (usuario.peso <= 0):
+  if usuario.peso <= 0:
     raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Peso inválido")
                         
   usuario.senha = auth_service.get_password_hash(usuario.senha)
