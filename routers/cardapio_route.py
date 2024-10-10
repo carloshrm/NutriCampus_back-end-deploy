@@ -7,21 +7,17 @@ from database import get_db
 router = APIRouter()
 
 @router.get("/cardapios/")
-def listar_todos_cardapios(db: Session = Depends(get_db)):
-    service = Cardapio_Service(db)
+def listar_todos_cardapios(service: Session = Depends(Cardapio_Service)):
     return service.buscar_todos_cardapios()
 
 @router.get("/cardapios/campus/{campus}")
-def listar_cardapios_por_campus(campus: str, db: Session = Depends(get_db)):
-    service = Cardapio_Service(db)
+def listar_cardapios_por_campus(campus: str, service: Session = Depends(Cardapio_Service)):
     return service.buscar_cardapio_por_campus(campus)
 
 @router.get("/cardapios/data/{data}")
-def listar_cardapios_por_data(data: str, db: Session = Depends(get_db)):
-    service = Cardapio_Service(db)
+def listar_cardapios_por_data(data: str, service: Session = Depends(Cardapio_Service)):
     return service.buscar_cardapio_por_data(data)
 
 @router.get("/cardapios/refeicao/{refeicao}")
-def listar_cardapios_por_refeicao(refeicao: str, db: Session = Depends(get_db)):
-    service = Cardapio_Service(db)
+def listar_cardapios_por_refeicao(refeicao: str, service: Session = Depends(Cardapio_Service)):
     return service.buscar_cardapio_por_refeicao(refeicao)
