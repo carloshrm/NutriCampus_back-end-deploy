@@ -13,3 +13,4 @@ class Usuario(Base):
   altura = Column(Float, CheckConstraint('altura > 0') ,nullable=False)
   atividade = Column(Integer, CheckConstraint('atividade >= 1 AND atividade <= 5'), nullable=False)
   sexo = Column(String(1), nullable=False)
+  campus = Column(String, nullable=False)

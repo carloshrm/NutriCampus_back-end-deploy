@@ -9,3 +9,4 @@ class Usuario_DTO(BaseModel):
   peso: float
   atividade: int
   sexo: str
+  campus: str
