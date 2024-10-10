@@ -50,7 +50,7 @@ def _preencher_info_alimento(lista_alimentos, linha_pdf, conteudo_categoria):
 
 def _processar_valor(val):
     if val.replace(",", "").isnumeric():
-        return locale.atof(val) / 100
+        return locale.atof(val.replace(",", ".")) / 100
     else:
         return 0
 
@@ -145,7 +145,7 @@ def executar_scraping(force=False):
     if (db.query(Alimento).count() != 0) and not force:
        return
   print("Iniciando scraping da tabela TACO...")
-  locale.setlocale(locale.LC_NUMERIC, "pt_BR.UTF-8")
+  # locale.setlocale(locale.LC_NUMERIC, "pt_BR.UTF-8")
   _baixar_pdf()
   colecao_info = _preparar_colecao()
   _reconhecer_centesimal(colecao_info)
