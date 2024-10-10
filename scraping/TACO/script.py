@@ -145,7 +145,7 @@ def executar_scraping(force=False):
     if (db.query(Alimento).count() != 0) and not force:
        return
   print("Iniciando scraping da tabela TACO...")
-  locale.setlocale(locale.LC_NUMERIC, "pt_br")
+  locale.setlocale(locale.LC_NUMERIC, "pt_BR.UTF-8")
   _baixar_pdf()
   colecao_info = _preparar_colecao()
   _reconhecer_centesimal(colecao_info)
