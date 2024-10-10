@@ -16,7 +16,7 @@ async def get_alimento(id: str, alimento_service: Alimento_Service = Depends(Ali
     
     return alimento_encontrado
 
-@router.get("/alimento/{name}")
+@router.get("/alimento/nome/{nome}")
 async def get_alimento_por_nome(nome: str, alimento_service: Alimento_Service = Depends(Alimento_Service)):
     if not nome:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Nome não informado.")

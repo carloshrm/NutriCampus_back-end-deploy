@@ -1,4 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Float, Integer, String, TIMESTAMP, Float
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import text
 from database import Base
@@ -7,7 +8,7 @@ class Alimento(Base):
   __tablename__ = 'alimento'
 
   _id = Column(Integer, primary_key=True, nullable=False)
-  _nome = Column(String, nullable=False)
+  _nome = Column(ARRAY(String), nullable=False)
   umidade = Column(Float, server_default="0.0")
   energia_kcal = Column(Float, server_default="0.0")
   energia_kj = Column(Float, server_default="0.0")

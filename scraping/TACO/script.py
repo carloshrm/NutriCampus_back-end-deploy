@@ -130,7 +130,7 @@ def _preencher_banco(info):
       if al[1]['nome'] == []:
         continue
 
-      novoAlim = Alimento(_id=al[0], _nome=";".join(al[1]['nome']) ,**dict(list(al[1]['centesimal'].items())[:11]))
+      novoAlim = Alimento(_id=al[0], _nome=al[1]['nome'],**dict(list(al[1]['centesimal'].items())[:11]))
       novoAlim.centesimal = Alimento_Centesimal(_id=al[0], **dict(list(al[1]['centesimal'].items())[11:]))
       novoAlim.graxos = Alimento_AcidosGraxos(_id=al[0], **dict(list(al[1]['acidos_graxos'].items())))
       novoAlim.aminoacidos = Alimento_Aminoacidos(_id=al[0], **dict(list(al[1]['aminoacidos'].items())))
