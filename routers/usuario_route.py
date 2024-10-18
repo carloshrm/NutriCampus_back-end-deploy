@@ -17,11 +17,11 @@ async def get_user_current(token: str  = Depends(oauth2_scheme), usuario_service
         raise InvalidTokenError()
 
     except InvalidTokenError:
-      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Erro ao executar autenticação")
+      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Usuário não autorizado.")
 
     user = usuario_service.get_by_id(id)
     if not user:
-      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Email ou senha inválidos")
+      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Usuário não autorizado.")
     return user
 
 
