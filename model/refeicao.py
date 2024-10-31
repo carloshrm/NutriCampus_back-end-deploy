@@ -8,6 +8,7 @@ class Refeicao(Base):
     id_refeicao = Column(Integer, primary_key=True, autoincrement=True)
     data_refeicao = Column(TIMESTAMP, nullable=False)
     tipo_refeicao = Column(String, nullable=False)  # Tipo de refeição (almoço, jantar, etc.)
+    id_usuario = Column(Integer, ForeignKey('usuario.id'))
 
     # Relacionamento: uma refeição pode ter vários pratos
     pratos = relationship('Prato', back_populates='refeicao')
@@ -30,7 +31,8 @@ class Ingrediente(Base):
 
     id_ingrediente = Column(Integer, primary_key=True, autoincrement=True)
     nome_ingrediente = Column(String, nullable=False)
-    calorias = Column(Float, nullable=False)
+    # calorias = Column(Float, nullable=False)
+    id_alimento = Column(Integer, ForeignKey('alimento._id'))
     quantidade = Column(Float, nullable=False)
     id_prato = Column(Integer, ForeignKey('prato.id_prato'))
 

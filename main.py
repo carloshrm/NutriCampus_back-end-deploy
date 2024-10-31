@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from database import Base, engine
 from scraping import timer
-from routers import alimento_route, usuario_route, cardapio_route
+from routers import alimento_route, usuario_route, cardapio_route, refeicao_route
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
@@ -18,6 +18,7 @@ app.add_middleware(
 )
 
 app.include_router(usuario_route.router)
+app.include_router(refeicao_route.router)
 app.include_router(alimento_route.router)
 app.include_router(cardapio_route.router)
 
