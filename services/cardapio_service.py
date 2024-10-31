@@ -18,7 +18,13 @@ class Cardapio_Service:
     def buscar_cardapio_por_data(self, data: str):
         """Busca os cardápios por data específica."""
         return self.db.query(Cardapio).filter(Cardapio.data == data).all()
+    
+    def buscar_cardapio_por_campus_e_data(self, campus: str, data: str):
+        """Busca os cardápios por campus e data específica."""
+        return self.db.query(Cardapio).filter(Cardapio.campus == campus, Cardapio.data == data).all()
 
     def buscar_cardapio_por_refeicao(self, refeicao: str):
         """Busca os cardápios por tipo de refeição (almoço, jantar)."""
         return self.db.query(Cardapio).filter(Cardapio.refeicao == refeicao).all()
+
+    
