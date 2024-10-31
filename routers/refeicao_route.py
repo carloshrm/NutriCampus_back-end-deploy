@@ -15,3 +15,7 @@ async def refeicao_create(refeicao_dto: Refeicao_DTO, id_usuario: Usuario_DTO = 
   refeicao_info["pratos"] = [Prato(nome_prato = p.get("nome_prato"), ingredientes = [Ingrediente(**i) for i in p.get("ingredientes")]) for p in refeicao_info.get("pratos")]
   refeicao_model = Refeicao(**refeicao_info, id_usuario=id_usuario, data_refeicao=date.today().isoformat())
   return refeicao_service.create(refeicao_model)
+
+@router.get("/refeicao/{id}")
+async def refeicao_get(id: str, refeicao_service: Refeicao_Service = Depends(Refeicao_Service)):
+  return refeicao_service.get_by_id(id)
