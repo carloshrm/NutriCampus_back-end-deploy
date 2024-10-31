@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Float, TIMESTAMP
+from sqlalchemy import Column, ForeignKey, Integer, String, Float, Boolean, TIMESTAMP
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -18,6 +18,7 @@ class Prato(Base):
 
     id_prato = Column(Integer, primary_key=True, autoincrement=True)
     nome_prato = Column(String, nullable=False)
+    link_receita = Column(String, nullable=True)
     id_refeicao = Column(Integer, ForeignKey('refeicao.id_refeicao'))
 
     # Relacionamento: um prato pertence a uma refeição
@@ -31,9 +32,12 @@ class Ingrediente(Base):
 
     id_ingrediente = Column(Integer, primary_key=True, autoincrement=True)
     nome_ingrediente = Column(String, nullable=False)
-    # calorias = Column(Float, nullable=False)
-    id_alimento = Column(Integer, ForeignKey('alimento._id'))
-    quantidade = Column(Float, nullable=False)
+    quantidade_original = Column(Float, nullable=True)
+    unidade_original = Column(String, nullable=True)
+    a_gosto = Column(Boolean, default=False)
+    quantidade_normalizada = Column(Float, nullable=True)
+    unidade_normalizada = Column(String, nullable=True)
+    calorias = Column(Float, nullable=True)
     id_prato = Column(Integer, ForeignKey('prato.id_prato'))
 
     # Relacionamento: um ingrediente pertence a um prato
