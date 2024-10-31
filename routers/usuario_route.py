@@ -26,6 +26,21 @@ async def get_user_current(token: str  = Depends(oauth2_scheme), usuario_service
     delattr(user, "senha")
     return user
 
+async def get_user_id(token: str  = Depends(oauth2_scheme), usuario_service: Usuario_Service = Depends(), auth_service: Auth_Service = Depends()):
+    try:
+      payload = auth_service.decode_token(token)
+      id = payload.get("sub")
+      if not payload or not id:
+        raise InvalidTokenError()
+
+    except InvalidTokenError:
+      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Usuário não autorizado.")
+
+    user = usuario_service.get_by_id(id)
+    if not user:
+      raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Usuário não autorizado.")
+
+    return id
 
 @router.get("/auth/me")
 async def get_me(current_user: Usuario_DTO = Depends(get_user_current)):
