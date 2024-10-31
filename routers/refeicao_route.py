@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from model.pydantic.auth_dto import JWT
 from model.pydantic.refeicao_dto import Refeicao_DTO
 from model.pydantic.usuario_dto import Usuario_DTO
@@ -17,5 +17,10 @@ async def refeicao_create(refeicao_dto: Refeicao_DTO, id_usuario: Usuario_DTO = 
   return refeicao_service.create(refeicao_model)
 
 @router.get("/refeicao/{id}")
-async def refeicao_get(id: str, refeicao_service: Refeicao_Service = Depends(Refeicao_Service)):
-  return refeicao_service.get_by_id(id)
+async def refeicao_get(id: str, refeicao_service: Refeicao_Service = Depends(Refeicao_Service), id_usuario: Usuario_DTO = Depends(get_user_id)):
+  refeicao = refeicao_service.get_by_id(id)
+
+  if refeicao.id_usuario != id_usuario:
+    raise HTTPException(status.HTTP_403_FORBIDDEN, detail="Acesso não autorizado.")
+  
+  return refeicao
