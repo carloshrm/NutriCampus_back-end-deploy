@@ -18,7 +18,7 @@ def listar_cardapios_por_campus(campus: str, service: Session = Depends(Cardapio
 def listar_cardapios_por_data(data: str, service: Session = Depends(Cardapio_Service)):
     return service.buscar_cardapio_por_data(data)
 
-@router.get("/cardapios/refeicao/{refeicao}")
+@router.get("/cardapio-refeicao/{campus}/{refeicao}")
 def listar_cardapios_por_refeicao(refeicao: str, service: Session = Depends(Cardapio_Service)):
     return service.buscar_cardapio_por_refeicao(refeicao)
 
