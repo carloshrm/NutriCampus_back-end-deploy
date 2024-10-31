@@ -22,6 +22,8 @@ async def get_user_current(token: str  = Depends(oauth2_scheme), usuario_service
     user = usuario_service.get_by_id(id)
     if not user:
       raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Usuário não autorizado.")
+    
+    delattr(user, "senha")
     return user
 
 

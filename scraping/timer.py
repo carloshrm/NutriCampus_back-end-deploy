@@ -13,11 +13,19 @@ host = os.getenv("HOST")
 
 SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@{host}/{database}"
 
-JOB_NAME = 'scrape-timer'
+JOB_NAME = 'z-timer'
 
 def run_all_scrapes():
-  TACOScraping.executar_scraping()
-  CardapioScraping.main()
+  print("Rodando todos os scrapes")
+  try:
+    TACOScraping.executar_scraping()
+  except:
+    print("Erro ao executar scraping da tabela TACO.")
+
+  try:
+    CardapioScraping.main()
+  except:
+    print("Erro ao executar scraping de cardapios.")
   # chamar outras tarefas de scraping
 
 def setup_scrape_jobs():
@@ -25,7 +33,6 @@ def setup_scrape_jobs():
   scheduler.add_jobstore('sqlalchemy', url=SQLALCHEMY_DATABASE_URL)
   scheduler.start()
 
-  run_all_scrapes()
   if not scheduler.get_job(JOB_NAME):
     scheduler.add_job(run_all_scrapes, 'cron', day_of_week='sun', hour=1, id=JOB_NAME)
   
