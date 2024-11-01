@@ -22,10 +22,7 @@ def run_all_scrapes():
   except:
     print("Erro ao executar scraping da tabela TACO.")
 
-  try:
-    CardapioScraping.main()
-  except:
-    print("Erro ao executar scraping de cardapios.")
+  CardapioScraping.main()
   # chamar outras tarefas de scraping
 
 def setup_scrape_jobs():
@@ -34,5 +31,6 @@ def setup_scrape_jobs():
   scheduler.start()
 
   if not scheduler.get_job(JOB_NAME):
-    scheduler.add_job(run_all_scrapes, 'cron', day_of_week='sun', hour=1, id=JOB_NAME)
+    run_all_scrapes()
+    scheduler.add_job(run_all_scrapes, 'cron', day_of_week='sun', hour=1, id=JOB_NAME, coalesce=True)
   
