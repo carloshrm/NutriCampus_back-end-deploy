@@ -30,7 +30,7 @@ def setup_scrape_jobs():
   scheduler.add_jobstore('sqlalchemy', url=SQLALCHEMY_DATABASE_URL)
   scheduler.start()
 
-  run_all_scrapes()
   if not scheduler.get_job(JOB_NAME):
+    run_all_scrapes()
     scheduler.add_job(run_all_scrapes, 'cron', day_of_week='sun', hour=1, id=JOB_NAME, coalesce=True)
   
