@@ -1,5 +1,5 @@
 import logging
-from scraper import buscar_link_receita, obter_soup_da_receita, extrair_ingredientes
+from scraping.ingredientes.scraper import buscar_link_receita, obter_soup_da_receita, extrair_ingredientes
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from model.refeicao import Prato, Ingrediente
@@ -34,6 +34,11 @@ def main():
             return
 
         for prato in pratos:
+            # Verificar se o prato já tem ingredientes salvos
+            if db.query(Ingrediente).filter(Ingrediente.id_prato == prato.id_prato).first():
+                logging.info(f"Prato '{prato.nome_prato}' já possui ingredientes no banco de dados. Pulando scraping.")
+                continue
+
             receita = prato.nome_prato
             logging.info(f"Processando a receita: {receita}")
 

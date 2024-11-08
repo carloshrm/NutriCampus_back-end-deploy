@@ -83,15 +83,23 @@ def salvar_no_banco(campus_data):
         for dia in dias:
             data = dia['data']
             for refeicao, pratos in dia['cardapio'].items():
+                # Verificar se já existe uma entrada para essa combinação de campus, data e refeicao
+                cursor.execute("""
+                    SELECT 1 FROM cardapios
+                    WHERE campus = %s AND data = %s AND refeicao = %s;
+                """, (campus, data, refeicao))
+
+                if cursor.fetchone():
+                    print(f"Registro duplicado detectado para {campus}, {data}, {refeicao}. Ignorando inserção.")
+                    continue  # Pular a inserção se já existir
+
+                # Extrair dados dos pratos
                 prato_principal = ', '.join(pratos.get('prato_principal', ['Não Encontrado']))
                 prato_veg = ', '.join(pratos.get('prato_veg', ['Não Encontrado']))
-
                 arroz_lista = pratos.get('arroz', ['Não Encontrado'])
                 arroz_branco, arroz_integral = separar_arroz(arroz_lista)
-
                 feijao_lista = pratos.get('feijao', ['Não Encontrado'])
                 feijao_principal, feijao_secundario = separar_feijao(feijao_lista)
-
                 guarnicao = ', '.join(pratos.get('guarnicao', ['Não Encontrado']))
                 salada = ', '.join(pratos.get('salada', ['Não Encontrado']))
 
@@ -100,7 +108,6 @@ def salvar_no_banco(campus_data):
                     INSERT INTO cardapios (campus, data, refeicao, prato_principal, prato_veg, arroz_principal, arroz_secundario, feijao_principal, feijao_secundario, guarnicao, salada)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """, (campus, data, refeicao, prato_principal, prato_veg, arroz_branco, arroz_integral, feijao_principal, feijao_secundario, guarnicao, salada))
-
 
     # Confirmar a transação e fechar a conexão
     conn.commit()

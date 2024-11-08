@@ -1,9 +1,8 @@
 from typing import Optional, Dict
 from unidecode import unidecode
-from utils import avaliar_quantidade, converter_para_singular, converter_para_unidade_padrao
-from constants import SUBSTITUICOES_FRACOES, PATTERN_INGREDIENTE, PATTERN_INGREDIENTE_SEM_UNIDADE
+from scraping.ingredientes.utils import avaliar_quantidade, converter_para_singular, converter_para_unidade_padrao
+from scraping.ingredientes.constants import SUBSTITUICOES_FRACOES, PATTERN_INGREDIENTE, PATTERN_INGREDIENTE_SEM_UNIDADE
 import re
-
 
 def processar_ingrediente(texto_limpo: str) -> Optional[Dict]:
     """
@@ -32,7 +31,9 @@ def processar_ingrediente(texto_limpo: str) -> Optional[Dict]:
     for k, v in SUBSTITUICOES_FRACOES.items():
         texto_limpo = texto_limpo.replace(k, v)
 
-    # Tentar corresponder com padrão completo
+    # Remover prefixos como "g de" ou "ml de" no nome do ingrediente
+    texto_limpo = re.sub(r'\b(g|ml|kg|l) de\b', r'\1', texto_limpo, flags=re.IGNORECASE)
+
     match = PATTERN_INGREDIENTE.match(texto_limpo)
     if match:
         quantidade_str = match.group(1)
@@ -57,23 +58,20 @@ def processar_ingrediente(texto_limpo: str) -> Optional[Dict]:
     # Limpar e padronizar a unidade
     if unidade_raw is not None:
         unidade_clean = unidade_raw.lower().strip()
-
-        # Remover parênteses da unidade
-        unidade_clean = unidade_clean.replace('(', '').replace(')', '')
-
-        # Padronizar colheres
+        unidade_clean = unidade_clean.replace('g de', 'g')  # Remove 'de' desnecessário para gramaturas
+        unidade_clean = unidade_clean.replace('(', '').replace(')', '')  # Remove parênteses
+        
+        # Padronizar colheres e xícaras
         if 'colher' in unidade_clean or 'colheres' in unidade_clean:
             if 'chá' in unidade_clean or 'cha' in unidade_clean:
                 unidade_original = 'colher (cha)'
             elif 'sopa' in unidade_clean:
                 unidade_original = 'colher (sopa)'
             else:
-                # Se não especificado, assumir colher de sopa
                 unidade_original = 'colher (sopa)'
         elif 'xícara' in unidade_clean or 'xicara' in unidade_clean:
-            unidade_original = 'xicara (cha)'  # Assumindo que xícaras são geralmente de chá
+            unidade_original = 'xicara (cha)'
         else:
-            # Converter para singular outras unidades
             unidade_original = converter_para_singular(unidade_clean)
     else:
         unidade_original = None

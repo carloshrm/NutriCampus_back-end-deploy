@@ -17,7 +17,7 @@ class Prato(Base):
     __tablename__ = 'prato'
 
     id_prato = Column(Integer, primary_key=True, autoincrement=True)
-    nome_prato = Column(String, nullable=False)
+    nome_prato = Column(String, nullable=False, unique=True)
     link_receita = Column(String, nullable=True)
     id_refeicao = Column(Integer, ForeignKey('refeicao.id_refeicao'))
 
