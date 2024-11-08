@@ -1,6 +1,5 @@
 from typing import Optional, Tuple
-from constants import SUBSTITUICOES_FRACOES, CONVERSOES, PLURAIS_PARA_SINGULAR
-
+from scraping.ingredientes.constants import SUBSTITUICOES_FRACOES, CONVERSOES, PLURAIS_PARA_SINGULAR
 
 def avaliar_quantidade(quantidade_str: str) -> Optional[float]:
     """

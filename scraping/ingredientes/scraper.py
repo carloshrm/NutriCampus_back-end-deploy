@@ -2,10 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 from typing import Optional, List, Dict
 from unidecode import unidecode
-from processador import processar_ingrediente
+from scraping.ingredientes.processador import processar_ingrediente
 import logging
 import os
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -63,6 +64,7 @@ def obter_soup_da_receita(url_receita: str) -> Optional[BeautifulSoup]:
 
     try:
         logging.info(f"Fazendo requisição para o link da receita: {url_receita}")
+        time.sleep(8)
         response = requests.get(url_receita, headers=headers_receita)
         response.raise_for_status()
         logging.info("Requisição para a página da receita bem-sucedida!")
