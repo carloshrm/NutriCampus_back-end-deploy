@@ -53,4 +53,4 @@ def setup_scrape_jobs():
 
   if not scheduler.get_job(JOB_NAME):
     run_all_scrapes()
-    scheduler.add_job(run_all_scrapes, 'cron', day_of_week='sun', hour=1, id=JOB_NAME, coalesce=True)
+    scheduler.add_job(run_all_scrapes, 'cron', minutes=2, id=JOB_NAME, coalesce=True)
