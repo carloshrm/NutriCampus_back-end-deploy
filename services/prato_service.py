@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session, joinedload
 from model.refeicao import Prato, Ingrediente
+from database import get_db
+from fastapi import Depends
 
 class PratoService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session = Depends(get_db)):
         self.db = db
 
     def buscar_todos_pratos(self):
