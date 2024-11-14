@@ -1,7 +1,7 @@
 from fastapi.params import Depends
 from sqlalchemy.orm import Session, joinedload
 from database import get_db
-from model.refeicao import Refeicao, Prato
+from model.refeicao import Refeicao, Prato, Consumo
 from datetime import date
 
 class Refeicao_Service:
@@ -10,7 +10,7 @@ class Refeicao_Service:
     self.db = db
 
   def get_by_id(self, id):
-    return self.db.query(Refeicao).filter(Refeicao.id_refeicao == id).options(joinedload(Refeicao.pratos).joinedload(Prato.ingredientes)).first()
+    return self.db.query(Refeicao).filter(Refeicao.id_refeicao == id).options(joinedload(Refeicao.pratos_consumidos)).first()
   
   def get_by_user(self, id_usuario, data_inicio = None, data_fim = None):
     if data_inicio:
