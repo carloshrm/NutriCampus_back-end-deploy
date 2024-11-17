@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 from model.refeicao import Prato, Ingrediente
 from database import get_db
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 
 class PratoService:
     def __init__(self, db: Session = Depends(get_db)):
@@ -24,11 +24,22 @@ class PratoService:
         return prato
 
     def atualizar_prato(self, id: int, prato_data: dict):
-        prato = self.buscar_prato_por_id(id)
+        prato = self.db.query(Prato).filter(Prato.id_prato == id).first()
         if not prato:
-            return None
+            raise HTTPException(status_code=404, detail="Prato não encontrado.")
+
+        self.db.query(Ingrediente).filter(Ingrediente.id_prato == id).delete()
+
         for key, value in prato_data.items():
-            setattr(prato, key, value)
+            if key != "ingredientes":  
+                setattr(prato, key, value)
+
+        if "ingredientes" in prato_data:
+            for ingrediente_data in prato_data["ingredientes"]:
+                novo_ingrediente = Ingrediente(**ingrediente_data)
+                novo_ingrediente.id_prato = id
+                self.db.add(novo_ingrediente)
+
         self.db.commit()
         self.db.refresh(prato)
         return prato
