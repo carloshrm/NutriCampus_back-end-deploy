@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Float, Boolean, TIMESTAMP
+from sqlalchemy import Column, ForeignKey, Integer, String, Float, Boolean, TIMESTAMP, UniqueConstraint
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -34,7 +34,8 @@ class Prato(Base):
     # refeicao = relationship('Refeicao', secondary='consumo', back_populates='pratos')
 
     # Relacionamento: um prato pode ter vários ingredientes
-    ingredientes = relationship('Ingrediente', back_populates='prato')
+    ingredientes = relationship('Ingrediente', back_populates='prato', cascade="all, delete-orphan")
+
 
 class Ingrediente(Base):
     __tablename__ = 'ingrediente'
@@ -47,7 +48,6 @@ class Ingrediente(Base):
     quantidade_normalizada = Column(Float, nullable=True)
     unidade_normalizada = Column(String, nullable=True)
     calorias = Column(Float, nullable=True)
-    id_prato = Column(Integer, ForeignKey('prato.id_prato'))
-
+    id_prato = Column(Integer, ForeignKey("prato.id_prato", ondelete="CASCADE"))
     # Relacionamento: um ingrediente pertence a um prato
     prato = relationship('Prato', back_populates='ingredientes')
