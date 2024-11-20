@@ -18,6 +18,16 @@ async def listar_todos_pratos(db: Session = Depends(get_db)):
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Nenhum prato encontrado.")
     return pratos
 
+@router.get("/pratos/nome/{nome}")
+async def buscar_prato_por_nome(nome: str, db: Session = Depends(get_db)):
+    """
+    Busca um prato pelo nome.
+    """
+    pratos = PratoService(db).buscar_prato_por_nome(nome)
+    if not pratos:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Prato não encontrado.")
+    return pratos
+
 @router.get("/pratos/{id}")
 async def get_prato(id: int, db: Session = Depends(get_db)):
     """
