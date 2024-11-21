@@ -16,7 +16,7 @@ host = os.getenv("HOST")
 
 SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@{host}/{database}"
 
-JOB_NAME = 'z-timer'
+JOB_NAME = 'scrape-timer'
 
 def run_all_scrapes():
   print("Rodando todos os scrapes")
@@ -47,10 +47,12 @@ def run_all_scrapes():
 
 
 def setup_scrape_jobs():
+
   scheduler = BackgroundScheduler()
   scheduler.add_jobstore('sqlalchemy', url=SQLALCHEMY_DATABASE_URL)
   scheduler.start()
+  # sem scrapes por enquanto
 
-  if not scheduler.get_job(JOB_NAME):
-    run_all_scrapes()
-    scheduler.add_job(run_all_scrapes, 'cron', day_of_week='sun', hour=1, id=JOB_NAME, coalesce=True)
+  # if not scheduler.get_job(JOB_NAME):
+  #   run_all_scrapes()
+  #   scheduler.add_job(run_all_scrapes, 'cron', day_of_week='sun', hour=1, id=JOB_NAME, coalesce=True)
