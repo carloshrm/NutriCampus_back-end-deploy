@@ -38,12 +38,10 @@ class Consumo_Service:
 
       return group_pratos
 
-    def get_consumo_por_data(self, id_usuario, data_inicio, data_fim):
+    def get_consumo_por_data(self, id_usuario, data):
 
-      if data_inicio:
-        if not data_fim:
-          data_fim = date.today().isoformat()
-        refs = self.db.query(Consumo).filter(Consumo.id_refeicao.in_([ref.id_refeicao for ref in self.db.query(Refeicao).filter(Refeicao.id_usuario == id_usuario and Refeicao.data_refeicao.between(data_inicio, data_fim)).all()])).all()
+      if data:
+        refs = self.db.query(Refeicao).filter(Refeicao.id_usuario == id_usuario, Refeicao.data_refeicao == data).all()
         consumo = self.db.query(Consumo).filter(Consumo.id_refeicao.in_([ref.id_refeicao for ref in refs])).all()
         pratos = self.db.query(Prato).filter(Prato.id_prato.in_([c.id_prato for c in consumo])).all()
         map_alimento_pratos = self.db.query(Map_Alimento).filter(Map_Alimento.id_prato.in_([p.id_prato for p in pratos])).all()
@@ -51,9 +49,9 @@ class Consumo_Service:
         group_pratos = {}
         for al in map_alimento_pratos:
           if al.id_prato in group_pratos:
-            group_pratos[al.id_prato].append(al)
-        else:
-          group_pratos[al.id_prato] = [al]
+            group_pratos[al.id_prato]["alimentos"].append(al)
+          else:
+            group_pratos[al.id_prato] = {"alimentos": [al], "quantidade": next((c.quantidade for c in consumo if c.id_prato == al.id_prato), None)}
 
         return group_pratos
       else:

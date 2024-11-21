@@ -25,8 +25,8 @@ async def refeicao_create(refeicao_dto: Refeicao_DTO,
   return refeicao_service.get_by_id(refeicao_criada.id_refeicao)
 
 @router.get("/refeicao/consumo")
-async def get_consumo_por_data(data_inicio: str = None, data_fim: str = None, consumo_service: Consumo_Service = Depends(Consumo_Service), id_usuario: Usuario_DTO = Depends(get_user_id)):
-  return consumo_service.get_consumo_por_data(id_usuario, data_inicio, data_fim)
+async def get_consumo_por_data(data: str , consumo_service: Consumo_Service = Depends(Consumo_Service), id_usuario: Usuario_DTO = Depends(get_user_id)):
+  return consumo_service.get_consumo_por_data(id_usuario, data)
 
 @router.post("/refeicao/consumo")
 async def add_consumo(consumo: Consumo_DTO, consumo_service: Consumo_Service = Depends(Consumo_Service)):
