@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
-from model.refeicao import Consumo, Prato, Refeicao
+from model.refeicao import Consumo, Prato, Refeicao, Map_Alimento
 from database import get_db
 from fastapi import Depends
 from datetime import date
@@ -10,13 +10,17 @@ class Consumo_Service:
 
     def get_consumo(self, id_usuario):
       refs = self.db.query(Refeicao).filter(Refeicao.id_usuario == id_usuario).all()
-      consumo = self.db.query(Consumo).filter(Consumo.id_refeicao.in_([ref.id_refeicao for ref in refs])).all()
-      return consumo
+      consumo = self.db.query(Consumo, Prato).filter(Consumo.id_refeicao.in_([ref.id_refeicao for ref in refs])).all()
+      pratos = self.db.query(Prato).filter(Prato.id_prato.in_([c.id_prato for c in consumo])).all()
+      map_alimento_pratos = self.db.query(Map_Alimento).filter(Map_Alimento.id_prato.in_([p.id_prato for p in pratos])).all()
+      return map_alimento_pratos
 
     def get_consumo_hoje(self, id_usuario):
       refs = self.db.query(Refeicao).filter(Refeicao.id_usuario == id_usuario and Refeicao.data_refeicao == date.today().isoformat()).all()
       consumo = self.db.query(Consumo).filter(Consumo.id_refeicao.in_([ref.id_refeicao for ref in refs])).all()
-      return consumo
+      pratos = self.db.query(Prato).filter(Prato.id_prato.in_([c.id_prato for c in consumo])).all()
+      map_alimento_pratos = self.db.query(Map_Alimento).filter(Map_Alimento.id_prato.in_([p.id_prato for p in pratos])).all()
+      return map_alimento_pratos
 
     def get_consumo_por_data(self, id_usuario, data_inicio, data_fim):
 
