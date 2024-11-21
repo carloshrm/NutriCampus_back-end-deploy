@@ -17,9 +17,9 @@ class Consumo_Service:
       group_pratos = {}
       for al in map_alimento_pratos:
         if al.id_prato in group_pratos:
-          group_pratos[al.id_prato].append(al)
+          group_pratos[al.id_prato]["alimentos"].append(al)
         else:
-          group_pratos[al.id_prato] = [al]
+          group_pratos[al.id_prato] = {"alimentos": [al], "quantidade": next((c.quantidade for c in consumo if c.id_prato == al.id_prato), None)}
 
       return group_pratos
 
@@ -32,9 +32,9 @@ class Consumo_Service:
       group_pratos = {}
       for al in map_alimento_pratos:
         if al.id_prato in group_pratos:
-          group_pratos[al.id_prato].append(al)
+          group_pratos[al.id_prato]["alimentos"].append(al)
         else:
-          group_pratos[al.id_prato] = [al]
+          group_pratos[al.id_prato] = {"alimentos": [al], "quantidade": next((c.quantidade for c in consumo if c.id_prato == al.id_prato), None)}
 
       return group_pratos
 
