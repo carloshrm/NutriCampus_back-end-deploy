@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List
-from model.refeicao import Prato, Ingrediente
+from model.refeicao import Prato, Ingrediente, Map_Alimento
+from model.pydantic.refeicao_dto import Map_Alimento_DTO
 from services.prato_service import PratoService
 from database import get_db
 from http import HTTPStatus
@@ -16,6 +17,16 @@ async def listar_todos_pratos(db: Session = Depends(get_db)):
     pratos = PratoService(db).buscar_todos_pratos()
     if not pratos:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Nenhum prato encontrado.")
+    return pratos
+
+@router.get("/pratos/nome/{nome}")
+async def buscar_prato_por_nome(nome: str, db: Session = Depends(get_db)):
+    """
+    Busca um prato pelo nome.
+    """
+    pratos = PratoService(db).buscar_prato_por_nome(nome)
+    if not pratos:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Prato não encontrado.")
     return pratos
 
 @router.get("/pratos/{id}")
@@ -49,6 +60,11 @@ async def criar_prato(prato_data: dict, db: Session = Depends(get_db)):
     Cria um novo prato.
     """
     prato = PratoService(db).criar_prato(prato_data)
+    return prato
+
+@router.post("/pratos/{id}/map")
+async def mapear_alimento(id: int, alimentos: List[Map_Alimento_DTO], db: Session = Depends(get_db)):
+    prato = PratoService(db).mapear_alimentos(id, alimentos)
     return prato
 
 @router.put("/pratos/{id}", status_code=HTTPStatus.OK)
