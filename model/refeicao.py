@@ -18,7 +18,6 @@ class Consumo(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_refeicao = Column(Integer, ForeignKey('refeicao.id_refeicao'))
-
     id_prato = Column(Integer, ForeignKey('prato.id_prato'))
     quantidade = Column(Float, nullable=False)
 
@@ -36,6 +35,16 @@ class Prato(Base):
     # Relacionamento: um prato pode ter vários ingredientes
     ingredientes = relationship('Ingrediente', back_populates='prato', cascade="all, delete-orphan")
 
+class Map_Alimento(Base):
+    __tablename__ = 'map_alimento'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_alimento = Column(Integer, ForeignKey('alimento._id'))
+    quantidade = Column(Float, nullable=False)
+    alimento = relationship('Alimento')
+
+    id_prato = Column(Integer, ForeignKey('prato.id_prato'))
+    prato = relationship('Prato')
 
 class Ingrediente(Base):
     __tablename__ = 'ingrediente'

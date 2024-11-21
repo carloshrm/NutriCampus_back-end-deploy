@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from model.pydantic.auth_dto import JWT
-from model.pydantic.refeicao_dto import Refeicao_DTO
+from model.pydantic.refeicao_dto import Consumo_DTO, Refeicao_DTO
 from model.pydantic.usuario_dto import Usuario_DTO
 from model.refeicao import Refeicao, Consumo
 from routers.usuario_route import get_user_id
@@ -27,6 +27,15 @@ async def refeicao_create(refeicao_dto: Refeicao_DTO,
 @router.get("/refeicao/consumo")
 async def get_consumo_por_data(data_inicio: str = None, data_fim: str = None, consumo_service: Consumo_Service = Depends(Consumo_Service), id_usuario: Usuario_DTO = Depends(get_user_id)):
   return consumo_service.get_consumo_por_data(id_usuario, data_inicio, data_fim)
+
+@router.post("/refeicao/consumo")
+async def add_consumo(consumo: Consumo_DTO, consumo_service: Consumo_Service = Depends(Consumo_Service)):
+  novo_consumo = consumo_service.add_consumo(Consumo(**consumo.model_dump()))
+  return novo_consumo
+
+@router.get("/refeicao/consumo/hoje")
+async def get_consumo_hoje(consumo_service: Consumo_Service = Depends(Consumo_Service), id_usuario: Usuario_DTO = Depends(get_user_id)):
+  return consumo_service.get_consumo_hoje(id_usuario)
 
 @router.get("/refeicao/{id}")
 async def refeicao_get(id: str, refeicao_service: Refeicao_Service = Depends(Refeicao_Service), id_usuario: Usuario_DTO = Depends(get_user_id)):

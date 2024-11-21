@@ -6,7 +6,7 @@ router = APIRouter()
 
 
 @router.get("/alimento/{id}")
-async def get_alimento(id: str, alimento_service: Alimento_Service = Depends(Alimento_Service)):
+async def get_alimento(id: int, alimento_service: Alimento_Service = Depends(Alimento_Service)):
     if not id or id <= 0 or id >= 600:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="ID inválido.")
 

@@ -1,6 +1,6 @@
 from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
-from model.refeicao import Prato, Ingrediente
+from model.refeicao import Prato, Ingrediente, Map_Alimento
 from database import get_db
 from fastapi import Depends, HTTPException
 from scraping.TACO.script import _remover_acentos
@@ -17,10 +17,20 @@ class PratoService:
 
     def buscar_prato_por_nome(self, nome: str):
         nome_limpo = nome.strip().lower()
-        return self.db.query(Prato).filter(func.lower(Prato.nome_prato).like(f"%{nome_limpo}%")).all()
+        return self.db.query(Prato).options(joinedload(Prato.ingredientes)).filter(func.lower(Prato.nome_prato).like(f"%{nome_limpo}%")).all()
 
     def buscar_ingredientes_por_prato_id(self, id: int):
         return self.db.query(Ingrediente).filter(Ingrediente.id_prato == id).all()
+
+    def mapear_alimentos(self, id: int, alimentos: list):
+        self.db.query(Map_Alimento).filter(Map_Alimento.id_prato == id).delete()
+        self.db.commit()
+        
+        for al in alimentos:
+          novo_map = Map_Alimento(id_prato=id, id_alimento=al.id_alimento, quantidade=al.quantidade)
+          self.db.add(novo_map)
+        self.db.commit()
+        return self.db.query(Map_Alimento).filter(Map_Alimento.id_prato == id).all()
 
     def criar_prato(self, prato_data: dict):
         prato = Prato(**prato_data)

@@ -10,7 +10,7 @@ class Refeicao_Service:
     self.db = db
 
   def get_by_id(self, id):
-    return self.db.query(Refeicao).filter(Refeicao.id_refeicao == id).options(joinedload(Refeicao.pratos_consumidos)).first()
+    return self.db.query(Refeicao).filter(Refeicao.id_refeicao == id).options(joinedload(Refeicao.pratos)).first()
   
   def get_by_user(self, id_usuario, data_inicio = None, data_fim = None):
     if data_inicio:
